@@ -273,7 +273,8 @@ html, body {
   .lang-selector {
     position: fixed;
     z-index: 50;
-    border-bottom: 5px solid $lang-select-active-bg;
+    border-bottom: 10px solid $lang-select-border-bg;
+    border-top: 10px solid $lang-select-border-bg;
   }
 }
 
@@ -286,7 +287,8 @@ html, body {
     float:left;
     color: $lang-select-text;
     text-decoration: none;
-    padding: 0 10px;
+    padding: 0 20px;
+    margin-left: 10px;
     line-height: 30px;
     outline: 0;
 
@@ -298,6 +300,7 @@ html, body {
     &.active {
       background-color: $lang-select-active-bg;
       color: $lang-select-active-text;
+      border-radius: 5px;
     }
   }
 
@@ -590,6 +593,13 @@ html, body {
 
   .toc-wrapper .lang-selector {
     display: block;
+    a {
+      padding: 0 10px;
+      margin-left: 0;
+      &.active {
+        border-radius: 0;
+      }
+    }
   }
 
   .page-wrapper .lang-selector {
