@@ -74,7 +74,7 @@ LogonLabs uses HTTP response codes to indicate the success or failure of a reque
 401 Not required for IDPX interface
 </aside>
 
-## Erros
+## Errors
 
 Code | Meaning
 ---------- | -------
