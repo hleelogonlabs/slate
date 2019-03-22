@@ -44,7 +44,10 @@ This is a client/server library. This library is used to manage the authorizatio
 
 This is a client/server library. This library is used to manage the authorization workflows and can also be used to facilitate the authorization callback workflows.
 
-`Link to repo: <LINK>`
+TODO Link to nuget package once created
+
+`https://bitbucket.org/logonlabs/logon-sdk-net/src/master/ <LINK>`
+
 
 # Error Handling
 
@@ -112,6 +115,12 @@ Logon::initialize(array(
 ));
 ```
 
+```csharp
+
+var logonClient = new Logon.IdPx.API.ClientLogonClient("https://idpx.logon-dev.com", "YOUR_APP_ID");
+
+```
+
 Describe the basic workflow
 
 - Call Authorize providing the following information
@@ -157,6 +166,10 @@ Logon.ping(callback);
 Logon::ping();
 ```
 
+```csharp
+var pingResponse = logonClient.Ping();
+```
+
 Ping is a basic API to check that you have the correct URL and to confirm the current version of the LogonLabs Authorization API.
 
 ## Authorize
@@ -170,11 +183,19 @@ Logon.authorize(Logon.idp.GOOGLE, 'consumer@example.com');
 Logon::authorize(Logon::GOOGLE, 'consumer@example.com');
 ```
 
+```csharp
+
+ var redirectUrl = _logonClient.GetAuthorizeRedirectUrl(IdentityProviderEnum.google, "consumer@example.com");
+ 
+Response.Redirect(redirectUrl);//NOTE depending on what flavor of .NET you are using (Asp.Net Core, .NET Framework), this could be slightly different
+
+```
+
 >Identity Providers
 
 ```javascript
 Logon.idp.GOOGLE
-Logon.idp.O365
+Logon.idp.MICROSOFT
 Logon.idp.FACEBOOK
 Logon.idp.LINKEDIN
 Logon.idp.OKTA
@@ -182,10 +203,18 @@ Logon.idp.OKTA
 
 ```php
 Logon::GOOGLE
-Logon::O365
+Logon::MICROSOFT
 Logon::FACEBOOK
 Logon::LINKEDIN
 Logon::OKTA
+```
+
+```csharp
+IdentityProviderEnum.Google
+IdentityProviderEnum.Microsoft
+IdentityProviderEnum.Facebook
+IdentityProviderEnum.LinkedIn
+IdentityProviderEnum.Okta
 ```
 
 Authorize is a redirection interface that can be called as either a POST or a GET depending on your requirements. Once called it will validate the parameters and redirect the user user to the identity provider specified. After confirmation from the identity provider, we complete custom validations based on your app settings. Once that is completed we redirect back to the URI for your app with a token to securely retrieve the ResponseData.
@@ -194,7 +223,7 @@ Authorize is a redirection interface that can be called as either a POST or a GE
 Parameter | Type | Description
 --------- | ------- | -----------
 app_id | string | Unique identifier for your application. Provided by LogonLabs.
-identity_provider | enum (office365, google, facebook, linkedin, okta) | The identity provider that the user is redirected to for authentication.
+identity_provider | enum (microsoft, google, facebook, linkedin, okta) | The identity provider that the user is redirected to for authentication.
 email_address | string (optional) | When provided it hints the email to Identity Provider so the user does not need to enter their email again. It also restricts this logon attempt to this email address.
 client_data | string (JSON object) | This is a dynamic object that can be used by the client to send pass through data at the start of the authorization workflow that will be passed to the callback at the end of the workflow.
 
@@ -202,6 +231,19 @@ client_data | string (JSON object) | This is a dynamic object that can be used b
 
 ```php
 Logon::getAuthorizationData(TOKEN)
+```
+
+```csharp
+
+var token = Request.Query["token"];///NOTE depending on what flavor of .NET you are using (Asp.Net Core, .NET Framework), this could be slightly different
+
+var authorizationData = _logonClient.GetAuthorizationData(token);
+
+if (authorizationData.validation_success && authorizationData.validation_details.provider_auth)
+{
+	//success!
+}
+
 ```
 
 This call allows your back end code to retrieve all the logon information. This includes information from the identity provider as well as LogonLabs specific validation information.
@@ -228,7 +270,7 @@ client_data | string | This is a dynamic object that can be used by the client t
 
 Parameter | Type | Description
 --------- | ------- | -----------
-identity_provider | enum (office365, google, facebook, linkedin, okta) | The identity provider that the user is redirected to for authentication.
+identity_provider | enum (microsoft, google, facebook, linkedin, okta) | The identity provider that the user is redirected to for authentication.
 uid | string | This is a unique identifier created for the user by the Identity Provider.
 first_name | string | The first name of the user provided by the Identity Provider.
 last_name | string | The last name of the user provided by the Identity Provider.
